@@ -119,12 +119,26 @@ function islandora_datastream_crud_push_datastream($ds_path) {
       exit;
     }
   }
+
+  // Need to get the datastream ID at least at this point.
+  $ds_fileparts = islandora_datastream_crud_ds_file_parts($ds_path);
+  if (isset($ds_fileparts['pid']) && isset($ds_fileparts['namespace']) && isset($ds_fileparts['dsid'])) {
+    $dsid = $ds_fileparts['dsid'];
+    $namespace = $ds_fileparts['namespace'];
+    $pid = $ds_fileparts['pid'];
+  }
+  else {
+    return FALSE;
+  }
+
+  /*
   $ds_filename = pathinfo($ds_path, PATHINFO_FILENAME);
   // Need to get the datastream ID at least at this point.
   list($namespace, $number, $dsid) = explode('_', $ds_filename);
   if (!$pid = islandora_datastream_crud_dsfilename_to_pid($ds_path)) {
     return FALSE;
   }
+  */
   module_load_include('inc', 'islandora', 'includes/utilities');
 
   if (!islandora_is_valid_pid($pid)) {
@@ -350,5 +364,22 @@ function islandora_datastream_crud_read_version_data_log($path) {
   }
   else {
     return FALSE;
+  }
+}
+
+function islandora_datastream_crud_ds_file_parts($filename) {
+  $last_ = strrchr($filename, "_");
+  if (strlen($last_)) {
+    $dsid_ext = substr($filename, (-strlen($last_) + 1));
+    $ns_pid = substr($filename, 0, (strlen($filename) - strlen($last_)));
+
+    @list($namespace, $pid) = explode("_", $filename, 2);
+    @list($dsid, $ext) = explode(".", $dsid_ext);
+
+    $pid = str_replace("_" . $dsid . "." . $ext, "", $pid);
+    return array('namespace' => $namespace, 'pid' => $namespace . ':' . $pid, 'dsid' => $dsid, 'extension' => $ext);
+  }
+  else {
+    return array();
   }
 }
