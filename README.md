@@ -17,6 +17,8 @@ Commands are inspired by a simple Git workflow (fetch, push, delete).
 * `drush islandora_datastream_crud_delete_datastreams --user=admin --dsid=FOO --pid_file=/tmp/delete_foo_from_these_objects.txt`
 * `drush islandora_datastream_crud_generate_derivatives --user=admin --source_dsid=OBJ --pid_file=/tmp/regenerate_derivatives_for_these_objects.txt`
 
+Note that you can include Drush's `-y` option to bypass confirmation prompts. This is useful if you are running Datastream CRUD in a `nohup` or scripted environment.
+
 ## Fetching PIDs
 
 The `islandora_datastream_crud_fetch_pids` command provides several options for specifying which objects you want datastreams from:
@@ -51,6 +53,7 @@ This module doesn't do anything in Step 3 (update or modify the fetched datastre
 * a PHP script that appends an element/fragment to a set of XML files
 * a shell script that adds a label/watermark to a set of image files
 * a PHP script that converts JPEG2000 files from those extracted from CONTENTdm to ones usable in Islandora 
+* a PHP script that performs search and replace on a directory of files
 
 You may not find a use for these three scripts, but they illustrate the kinds of things you may want to do to datastream files.
 
@@ -82,6 +85,8 @@ the following command would add three datastreams (DS1, DS2, and DS3, all with a
 ### Deleting datastreams
 
 Another subset of the general workflow in which you do not fetch datastreams is to delete a datastream from a set of objects. To do this, you only need to specify the objects you want to delete the datastream from in the PID file, and the datastream ID you want to delete.
+
+Note that you cannot delete the DC datastream. Fedora Commons requires that each object has a DC datastream.
 
 ### Exporting datastreams
 
