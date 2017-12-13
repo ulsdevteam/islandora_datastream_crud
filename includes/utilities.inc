@@ -121,11 +121,12 @@ function islandora_datastream_crud_push_datastream($ds_path) {
   }
 
   // Need to get the datastream ID at least at this point.
-  $ds_fileparts = islandora_datastream_crud_ds_file_parts($ds_path);
+  $pathinfo_parts = pathinfo($ds_path);
+  $ds_fileparts = islandora_datastream_crud_ds_file_parts($pathinfo_parts['filename']);
   if (isset($ds_fileparts['pid']) && isset($ds_fileparts['namespace']) && isset($ds_fileparts['dsid'])) {
     $dsid = $ds_fileparts['dsid'];
     $namespace = $ds_fileparts['namespace'];
-    $pid = $ds_fileparts['pid'];
+    $pid = substr($ds_fileparts['pid'], 0, strlen($ds_fileparts['pid']) - strlen($dsid) - 1);
   }
   else {
     return FALSE;
